@@ -3,32 +3,28 @@
 public class Settings : ModSettings
 {
 	private static bool _enableDebugLogging;
-	private static bool _enableTicksMultiplier = true;
-	private static int _ticksMultiplier = 10;
+	private static int _tickRateMultiplier;
+	private static bool _enableTickRateMultiplier = true;
 
 	public static bool EnableDebugLogging => _enableDebugLogging;
-	public static bool EnableTicksMultiplier => _enableTicksMultiplier;
-	public static int TicksMultiplier => _ticksMultiplier;
+	public static int TickRateMultiplier => _tickRateMultiplier;
+	public static bool EnableTickRateMultiplier => _enableTickRateMultiplier;
 
 	public static void DoSettingsWindowContents(Rect inRect)
 	{
 		var ls = new Listing_Standard();
 		ls.Begin(inRect);
 		ls.CheckboxLabeled("Enable debug mode", ref _enableDebugLogging, "When enabled, game outputs detailed debug information to the game log.");
-		ls.CheckboxLabeled("Enable ticks multiplier", ref _enableTicksMultiplier, "When enabled, game will update less frequently, which will save TPS.");
+		ls.CheckboxLabeled("Enable tick rate multiplier", ref _enableTickRateMultiplier, "When enabled, allows adjust tick rates.");
 
-		if (_enableTicksMultiplier)
-		{
-			ls.Label("Ticks multiplier");
-			_ticksMultiplier = (int)ls.Slider(_ticksMultiplier, 1f, 100f);
-			_ticksMultiplier = Math.Clamp(_ticksMultiplier, 1, 100);
-		}
+		if (_enableTickRateMultiplier)
+			_tickRateMultiplier = (int)ls.SliderLabeled($"Tick rates: {_tickRateMultiplier}", _tickRateMultiplier, 15f, 360f);
 		ls.Gap();
 		if (Widgets.ButtonText(new Rect(0f, ls.CurHeight, 180f, 29f), "Reset settings"))
 		{
 			_enableDebugLogging = false;
-			_enableTicksMultiplier = true;
-			_ticksMultiplier = 10;
+			_tickRateMultiplier = 180;
+			_enableTickRateMultiplier = true;
 		}
 		ls.End();
 	}
@@ -37,7 +33,7 @@ public class Settings : ModSettings
 	{
 		base.ExposeData();
 		Scribe_Values.Look(ref _enableDebugLogging, "enableDebugLogging", false);
-		Scribe_Values.Look(ref _enableTicksMultiplier, "enableTicksMultiplier", true);
-		Scribe_Values.Look(ref _ticksMultiplier, "ticksMultiplierRate", 10);
+		Scribe_Values.Look(ref _tickRateMultiplier, "tickRateMultiplier", 180);
+		Scribe_Values.Look(ref _enableTickRateMultiplier, "enableTickRateMultiplier", true);
 	}
 }

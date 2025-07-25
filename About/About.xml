@@ -21,27 +21,26 @@
 	</loadAfter>
 	<url></url>
 	<description>
-		Functionality
-		- Redesigned hauling, capable of handling tens of thousands of things at once. Hauling 12k
-		things takes ~5 mins for 10 pawns.
-		- Tick tweaks, that save >100 TPS in late game by reducing number of game operations.
-		- (WIP) Construction/Deconstruction
+Functionality
+1. Redesigned hauling, capable of handling tens of thousands of things at once. Hauling 12k things takes ~4 mins for 10 pawns.
+2. Tick tweaks, that improve late game performance by reducing number of game operations.
 
-		Compatible mods:
-		- Allow Tools - mod automatically adjust to haul urgently, no need for Haul+
-		- Combat Extended
-		- Any Extended Storage mod
-		Incompatible mods:
-		- Pick Up and Haul - similar idea, but PUAH isn't late game optimized or huge scale
-		- Any mod that changes tick functionality
-		- Any "smart" construction/deconstruction mod
+Compatible mods:
+1. Allow Tools - mod automatically adjust to haul urgently, no need for Haul+
+2. Combat Extended
+3. Any Extended Storage mod
 
-		Troubleshooting
-		- Enable debug mode in Options/Mod Options/RimWorld Performance.
-		- Extract player.log from Options/General/Log file folder and report it on GitHub.
-		- Remember to disable debug mode aftewards.
+Incompatible mods:
+1. Pick Up and Haul - similar idea, but PUAH isn't late game optimized or huge scale
+2. Any mod that changes tick functionality
+3. Any "smart" construction/deconstruction mod
 
-		Steam:
-		GitHub:https://github.com/Xeinaemm/RimWorldPerformance
+Troubleshooting
+1. Enable debug mode in Options/Mod Options/RimWorld Performance.
+2. Extract player.log from Options/General/Log file folder and report it on GitHub.
+3. Remember to disable debug mode aftewards.
+
+Steam:
+GitHub:https://github.com/Xeinaemm/RimWorldPerformance
 	</description>
 </ModMetaData>

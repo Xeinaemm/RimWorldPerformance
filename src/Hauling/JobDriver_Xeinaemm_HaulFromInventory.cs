@@ -14,7 +14,7 @@ public class JobDriver_Xeinaemm_HaulFromInventory : JobDriver
 		return true;
 	}
 
-	public override IEnumerable<Toil> MakeNewToils()
+	protected override IEnumerable<Toil> MakeNewToils()
 	{
 		var nextTarget = Toils_General.Do(() =>
 		{
@@ -43,7 +43,7 @@ public class JobDriver_Xeinaemm_HaulFromInventory : JobDriver
 		yield return Toils_Jump.JumpIfHaveTargetInQueue(TargetIndex.A, nextTarget);
 
 		yield return carryToCell;
-		yield return Toils_Haul.PlaceHauledThingInCell(TargetIndex.B, carryToCell, true, true);
+		yield return Toils_Haul.PlaceHauledThingInCell(TargetIndex.B, carryToCell, true);
 		yield return Toils_Jump.JumpIfHaveTargetInQueue(TargetIndex.A, nextTarget);
 	}
 }

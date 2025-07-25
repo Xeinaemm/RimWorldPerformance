@@ -13,14 +13,22 @@ public class JobDriver_Xeinaemm_HaulToInventory : JobDriver
 		return true;
 	}
 
-	public override IEnumerable<Toil> MakeNewToils()
+	protected override IEnumerable<Toil> MakeNewToils()
 	{
 		var nextTarget = Toils_JobTransforms.ExtractNextTargetFromQueue(TargetIndex.A);
 		yield return nextTarget;
 		yield return Toils_Goto.Goto(TargetIndex.A, PathEndMode.ClosestTouch);
 		yield return Toils_General.Do(() =>
 		{
-			pawn.carryTracker.TryStartCarry(TargetThingA, job.count);
+			var count = Math.Min(job.count, MassUtility.CountToPickUpUntilOverEncumbered(pawn, TargetThingA));
+			if (count <= 0)
+			{
+				pawn.CheckIfShouldUnloadInventory();
+				pawn.ClearReservationsForJob(job);
+				EndJobWith(JobCondition.Succeeded);
+				return;
+			}
+			pawn.carryTracker.TryStartCarry(TargetThingA, count);
 			if (!pawn.IsCarrying())
 				return;
 			pawn.carryTracker.innerContainer.TryTransferToContainer(pawn.carryTracker.CarriedThing, pawn.inventory.innerContainer);

@@ -2,16 +2,20 @@
 
 internal static class Extensions
 {
+	private const int MAX_NOT_URGENT_THINGS_PER_JOB = 50;
+	private const int MAX_URGENT_THINGS_PER_JOB = 2;
 	private static readonly object _lockObject = new();
-	public static void CheckIfShouldUnloadInventory(this Pawn pawn) =>
+
+	internal static void CheckIfShouldUnloadInventory(this Pawn pawn) =>
 		Task.Run(() =>
 		{
-			if ((pawn.jobs.curJob != null && pawn.jobs.curJob.def.defName is "Xeinaemm_HaulFromInventory")
-				|| pawn.jobs.jobQueue.Any(x => x.job.def.defName is "Xeinaemm_HaulFromInventory"))
-				return;
-
 			if (!pawn.IsModStateValidAndActive() || pawn.inventory.innerContainer.Count == 0)
 				return;
+
+			if ((pawn.jobs.curJob != null && pawn.jobs.curJob.def == XeinaemmDefs.Xeinaemm_HaulFromInventory)
+				|| pawn.jobs.jobQueue.Any(x => x.job.def == XeinaemmDefs.Xeinaemm_HaulFromInventory))
+				return;
+
 			lock (_lockObject)
 			{
 				var job = new Job(XeinaemmDefs.Xeinaemm_HaulFromInventory);
@@ -27,17 +31,17 @@ internal static class Extensions
 			}
 		});
 
-	public static Job HaulToInventory(this Pawn pawn)
+	internal static Job HaulToInventory(this Pawn pawn)
 	{
 		var job = new Job(XeinaemmDefs.Xeinaemm_HaulToInventory);
 		pawn.GetClosestAndEnqueue(job);
 		return job.targetQueueA.Count > 0 ? job : null;
 	}
 
-	public static void CheckUrgentHaul(this Pawn pawn) =>
+	internal static void CheckUrgentHaul(this Pawn pawn) =>
 		Task.Run(() =>
 		{
-			if (WorkCache.UrgentCache[pawn.Map].IsEmpty)
+			if (HaulCache.UrgentCache[pawn.Map].IsEmpty)
 				return;
 			var job = new Job(XeinaemmDefs.Xeinaemm_HaulToInventory);
 			pawn.GetUrgentAndEnqueue(job);
@@ -45,20 +49,36 @@ internal static class Extensions
 				pawn.jobs.jobQueue.EnqueueFirst(job);
 		});
 
-	public static bool IsModStateValidAndActive(this Pawn pawn) =>
+	internal static bool IsModStateValidAndActive(this Pawn pawn) =>
 		XeinaemmDefs.Xeinaemm_HaulToInventory != null
 		&& XeinaemmDefs.Xeinaemm_HaulFromInventory != null
 		&& pawn.RaceProps.IsAllowedRace()
 		&& pawn.Faction == Faction.OfPlayerSilentFail
 		&& !pawn.IsQuestLodger();
 
-	public static bool IsUrgent(this Thing thing, Map map) =>
-		ModCompatibilityCheck.AllowToolIsActive && map.designationManager.DesignationOn(thing)?.def == XeinaemmDefs.AllowToolsHaulUrgently;
+	internal static bool IsUrgent(this Thing thing, Map map) =>
+		ModCompatibilityCheck.AllowToolIsActive &&
+		map.designationManager.DesignationOn(thing)?.def == DefDatabase<DesignationDef>.GetNamedSilentFail("HaulUrgentlyDesignation");
 
-	public static bool IsCorrupted(this Thing thing, Pawn pawn) =>
+	internal static bool IsCorrupted(this Thing thing, Pawn pawn) =>
 		thing is null or Corpse || !thing.Spawned || thing.Destroyed || !HaulAIUtility.PawnCanAutomaticallyHaul(pawn, thing, false);
 
-	public static bool IsAllowedRace(this RaceProperties props) => props.Humanlike || props.Animal || props.IsMechanoid;
+	internal static void CheckForGameChanges(this Game game)
+	{
+		HaulCache.ForceCleanup();
+
+		foreach (var (pawn, job) in game.Maps
+			.SelectMany(map => map.mapPawns.AllPawns)
+			.SelectMany(pawn => pawn.jobs.AllJobs()
+			.Where(t => t.def == XeinaemmDefs.Xeinaemm_HaulFromInventory || t.def == XeinaemmDefs.Xeinaemm_HaulToInventory)
+			.Select(job => (pawn, job))))
+		{
+			pawn.jobs.EndCurrentOrQueuedJob(job, JobCondition.InterruptForced);
+			Log.Message($"Canceled mod-specific {job} job for {pawn}");
+		}
+	}
+
+	internal static bool IsAllowedRace(this RaceProperties props) => props.Humanlike || props.Animal || props.IsMechanoid;
 
 	private static void FindBestBetterStorageFor(this Pawn pawn, Thing thing, Job job)
 	{
@@ -112,13 +132,13 @@ internal static class Extensions
 		job.targetQueueA ??= [];
 		job.countQueue ??= [];
 
-		while (!WorkCache.UrgentCache[pawn.Map].IsEmpty)
+		while (!HaulCache.UrgentCache[pawn.Map].IsEmpty)
 		{
-			if (job.targetQueueA.Count >= 2)
+			if (job.targetQueueA.Count >= MAX_URGENT_THINGS_PER_JOB)
 				break;
-			if (!WorkCache.UrgentCache[pawn.Map].TryDequeue(out var candidate) || candidate.IsCorrupted(pawn))
+			if (!HaulCache.UrgentCache[pawn.Map].TryDequeue(out var candidate) || candidate.IsCorrupted(pawn))
 				continue;
-			if (previousThing != null && (previousThing.Position - candidate.Position).LengthHorizontalSquared > 49f)
+			if (previousThing != null && (previousThing.Position - candidate.Position).LengthHorizontalSquared > 25f)
 				continue;
 			var count = Math.Min(candidate.stackCount, MassUtility.CountToPickUpUntilOverEncumbered(pawn, candidate));
 			if (count <= 0)
@@ -135,11 +155,11 @@ internal static class Extensions
 		job.targetQueueA ??= [];
 		job.countQueue ??= [];
 
-		while (!WorkCache.Cache[pawn.Map].IsEmpty)
+		while (!HaulCache.Cache[pawn.Map].IsEmpty)
 		{
-			if (job.targetQueueA.Count >= 50)
+			if (job.targetQueueA.Count >= MAX_NOT_URGENT_THINGS_PER_JOB)
 				break;
-			if (!WorkCache.Cache[pawn.Map].TryDequeue(out var candidate) || candidate.IsCorrupted(pawn))
+			if (!HaulCache.Cache[pawn.Map].TryDequeue(out var candidate) || candidate.IsCorrupted(pawn))
 				continue;
 			if (previousThing != null && (previousThing.Position - candidate.Position).LengthHorizontalSquared > 144f)
 				continue;
@@ -151,25 +171,5 @@ internal static class Extensions
 			job.countQueue.Add(count);
 			pawn.GetClosestAndEnqueue(job, candidate);
 		}
-	}
-
-	public static void CheckForGameChanges(this List<Map> maps)
-	{
-		Task.Run(() =>
-		{
-			WorkCache.ForceCleanup();
-			Log.Message($"Cleaned cache({nameof(WorkCache)}: {WorkCache.DebugInfo}");
-
-			foreach (var (pawn, job) in maps
-				.SelectMany(map => map.mapPawns.AllPawns)
-				.SelectMany(pawn => pawn.jobs.AllJobs()
-				.Where(t => t.def.defName is "HaulToInventory" or "UnloadYourHauledInventory")
-				.Select(job => (pawn, job))))
-			{
-				pawn.jobs.EndCurrentOrQueuedJob(job, JobCondition.InterruptForced);
-				Log.Message($"Canceled mod-specific {job} job for {pawn}");
-			}
-		});
-		Log.Message($"Performed cleanup");
 	}
 }

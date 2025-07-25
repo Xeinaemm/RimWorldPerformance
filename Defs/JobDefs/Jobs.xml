@@ -4,8 +4,8 @@
     <defName>Xeinaemm_HaulToInventory</defName>
     <driverClass>Xeinaemm.Hauling.JobDriver_Xeinaemm_HaulToInventory</driverClass>
     <reportString>gathering TargetA to hauling inventory.</reportString>
-    <casualInterruptible>false</casualInterruptible>
-    <suspendable>false</suspendable>
+    <casualInterruptible>true</casualInterruptible>
+    <suspendable>true</suspendable>
   </JobDef>
   <JobDef>
     <defName>Xeinaemm_HaulFromInventory</defName>

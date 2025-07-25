@@ -8,7 +8,6 @@ internal static class HarmonyPatches
 
 		if (Settings.EnableDebugLogging)
 			Harmony.DEBUG = true;
-		harmony.ApplyHaulingPatches();
-		harmony.ApplyTicksPatches();
+		harmony.PatchAll();
 	}
 }

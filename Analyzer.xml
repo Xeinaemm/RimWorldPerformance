@@ -1,0 +1,13 @@
+<Analyzer>
+	<RimWorldPerformance>
+		<Types>
+			<li>Xeinaemm.Hauling.JobDriver_Xeinaemm_HaulFromInventory</li>
+			<li>Xeinaemm.Hauling.JobDriver_Xeinaemm_HaulToInventory</li>
+			<li>Xeinaemm.Hauling.WorkGiver_Xeinaemm_HaulGeneral</li>
+			<li>Xeinaemm.Hauling.HaulCache</li>
+			<li>Xeinaemm.Hauling.Patches</li>
+			<li>Xeinaemm.Hauling.Extensions</li>
+			<li>Xeinaemm.Patches.TickRate</li>
+		</Types>
+	</RimWorldPerformance>
+</Analyzer>
