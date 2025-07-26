@@ -5,13 +5,12 @@ internal static class HaulCache
 	private const int TICK_RATE_DELAY = 360;
 	internal static ConcurrentDictionary<Map, ConcurrentQueue<Thing>> Cache { get; private set; } = [];
 	internal static ConcurrentDictionary<Map, ConcurrentQueue<Thing>> UrgentCache { get; private set; } = [];
-	internal static ConcurrentDictionary<Map, int> NextWorkCacheTick { get; private set; } = [];
-	internal static string DebugInfo => $"Number of items in cache: {Cache.Count} and urgent cache {Cache.Count}";
+	internal static ConcurrentDictionary<Map, int> NextTick { get; private set; } = [];
 
 	internal static ConcurrentQueue<Thing> CalculatePotentialWork(Pawn pawn)
 	{
 		var currentTick = Find.TickManager.TicksGame;
-		if (NextWorkCacheTick.TryGetValue(pawn.Map, out var tick) && currentTick < tick)
+		if (NextTick.TryGetValue(pawn.Map, out var tick) && currentTick < tick)
 			return UrgentCache[pawn.Map].IsEmpty ? Cache[pawn.Map] : UrgentCache[pawn.Map];
 
 		//Make sure things are sorted counterclockwise from the center.
@@ -28,7 +27,7 @@ internal static class HaulCache
 		UrgentCache.AddOrUpdate(pawn.Map, urgentCache, (key, oldValue) => urgentCache);
 
 		var nextTick = UrgentCache[pawn.Map].IsEmpty ? currentTick + Math.Max(Cache.Count, TICK_RATE_DELAY) : currentTick + TICK_RATE_DELAY;
-		NextWorkCacheTick.AddOrUpdate(pawn.Map, nextTick, (key, oldValue) => nextTick);
+		NextTick.AddOrUpdate(pawn.Map, nextTick, (key, oldValue) => nextTick);
 
 		return UrgentCache[pawn.Map].IsEmpty ? Cache[pawn.Map] : UrgentCache[pawn.Map];
 	}
@@ -37,6 +36,6 @@ internal static class HaulCache
 	{
 		Cache.Clear();
 		UrgentCache.Clear();
-		NextWorkCacheTick.Clear();
+		NextTick.Clear();
 	}
 }

@@ -9,23 +9,23 @@ internal static class Extensions
 	internal static void CheckIfShouldUnloadInventory(this Pawn pawn) =>
 		Task.Run(() =>
 		{
-			if (!pawn.IsModStateValidAndActive() || pawn.inventory.innerContainer.Count == 0)
+			if (!pawn.IsValidHaulingState() || pawn.inventory.innerContainer.Count == 0)
 				return;
 
-			if ((pawn.jobs.curJob != null && pawn.jobs.curJob.def == XeinaemmDefs.Xeinaemm_HaulFromInventory)
-				|| pawn.jobs.jobQueue.Any(x => x.job.def == XeinaemmDefs.Xeinaemm_HaulFromInventory))
+			if ((pawn.jobs.curJob != null && pawn.jobs.curJob.def == XeinaemmHaulingDefs.HaulFromInventory)
+				|| pawn.jobs.jobQueue.Any(x => x.job.def == XeinaemmHaulingDefs.HaulFromInventory))
 				return;
 
 			lock (_lockObject)
 			{
-				var job = new Job(XeinaemmDefs.Xeinaemm_HaulFromInventory);
+				var job = new Job(XeinaemmHaulingDefs.HaulFromInventory);
 				pawn.inventory.innerContainer.RemoveWhere(x => x == null);
 				foreach (var thing in pawn.inventory.innerContainer)
 					pawn.FindBestBetterStorageFor(thing, job);
 
 				if (job.targetQueueA.Count == 0)
 					return;
-				job.workGiverDef = XeinaemmDefs.Xeinaemm_HaulGeneral;
+				job.workGiverDef = XeinaemmHaulingDefs.HaulGeneral;
 				pawn.jobs.jobQueue.EnqueueFirst(job);
 				return;
 			}
@@ -33,7 +33,7 @@ internal static class Extensions
 
 	internal static Job HaulToInventory(this Pawn pawn)
 	{
-		var job = new Job(XeinaemmDefs.Xeinaemm_HaulToInventory);
+		var job = new Job(XeinaemmHaulingDefs.HaulToInventory);
 		pawn.GetClosestAndEnqueue(job);
 		return job.targetQueueA.Count > 0 ? job : null;
 	}
@@ -43,18 +43,14 @@ internal static class Extensions
 		{
 			if (HaulCache.UrgentCache[pawn.Map].IsEmpty)
 				return;
-			var job = new Job(XeinaemmDefs.Xeinaemm_HaulToInventory);
+			var job = new Job(XeinaemmHaulingDefs.HaulToInventory);
 			pawn.GetUrgentAndEnqueue(job);
 			if (job.targetQueueA.Count > 0)
 				pawn.jobs.jobQueue.EnqueueFirst(job);
 		});
 
-	internal static bool IsModStateValidAndActive(this Pawn pawn) =>
-		XeinaemmDefs.Xeinaemm_HaulToInventory != null
-		&& XeinaemmDefs.Xeinaemm_HaulFromInventory != null
-		&& pawn.RaceProps.IsAllowedRace()
-		&& pawn.Faction == Faction.OfPlayerSilentFail
-		&& !pawn.IsQuestLodger();
+	internal static bool IsValidHaulingState(this Pawn pawn) =>
+		pawn.RaceProps.IsAllowedRace() && pawn.Faction == Faction.OfPlayerSilentFail && !pawn.IsQuestLodger();
 
 	internal static bool IsUrgent(this Thing thing, Map map) =>
 		ModCompatibilityCheck.AllowToolIsActive &&
@@ -62,21 +58,6 @@ internal static class Extensions
 
 	internal static bool IsCorrupted(this Thing thing, Pawn pawn) =>
 		thing is null or Corpse || !thing.Spawned || thing.Destroyed || !HaulAIUtility.PawnCanAutomaticallyHaul(pawn, thing, false);
-
-	internal static void CheckForGameChanges(this Game game)
-	{
-		HaulCache.ForceCleanup();
-
-		foreach (var (pawn, job) in game.Maps
-			.SelectMany(map => map.mapPawns.AllPawns)
-			.SelectMany(pawn => pawn.jobs.AllJobs()
-			.Where(t => t.def == XeinaemmDefs.Xeinaemm_HaulFromInventory || t.def == XeinaemmDefs.Xeinaemm_HaulToInventory)
-			.Select(job => (pawn, job))))
-		{
-			pawn.jobs.EndCurrentOrQueuedJob(job, JobCondition.InterruptForced);
-			Log.Message($"Canceled mod-specific {job} job for {pawn}");
-		}
-	}
 
 	internal static bool IsAllowedRace(this RaceProperties props) => props.Humanlike || props.Animal || props.IsMechanoid;
 
@@ -87,7 +68,7 @@ internal static class Extensions
 		job.targetQueueA ??= [];
 		job.targetQueueB ??= [];
 		job.countQueue ??= [];
-		job.workGiverDef = XeinaemmDefs.Xeinaemm_HaulGeneral;
+		job.workGiverDef = XeinaemmHaulingDefs.HaulGeneral;
 		if (StoreUtility.TryFindBestBetterStorageFor(thing, pawn, pawn.Map, StoreUtility.CurrentStoragePriorityOf(thing), pawn.Faction, out var storeCell, out var dest))
 		{
 			LocalTargetInfo storeTarget = null;

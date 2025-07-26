@@ -22,7 +22,7 @@ internal static class Patches
 	}
 
 	/// <summary>
-	/// Combat Extended compatibility patch includes a filter for quests.
+	/// The Combat Extended compatibility patch includes a filter for quests.
 	/// </summary>
 	[HarmonyPatch(typeof(PawnUtility), nameof(PawnUtility.CanPickUp))]
 	private static class Xeinaemm_CanPickUp_Patch
@@ -48,6 +48,9 @@ internal static class Patches
 		private static void Prefix(Game __instance) => __instance.CheckForGameChanges();
 	}
 
+	/// <summary>
+	/// Replace the vanilla hauling method with the mod-specific one.
+	/// </summary>
 	[HarmonyPatch(typeof(JobGiver_Haul), "TryGiveJob")]
 	private static class Xeinaemm_JobGiver_Haul_Patch
 	{

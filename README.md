@@ -12,10 +12,11 @@ All RimWorld performance tweaks in one place!
 - Allow Tools - mod automatically adjusts to haul urgently, no need for Haul+
 - Combat Extended
 - Any Extended Storage mod
+
 ## Incompatible mods:
 - Pick Up and Haul - similar idea, but PUAH isn't late game optimized or huge scale
-- Any mod that changes tick functionality
-- Any "smart" construction/deconstruction mod
+- Any mod that changes tick rate functionality
+- Any "smart" construction/deconstruction mod - unlike other 'smart' mods, it replaces the entire implementation rather than attempting to inject code into existing ones. Injection often results in conflicts with other mods, even if they don't affect this area — hauling is an example of this.
 
 ## Troubleshooting
 - Check first in mod (if installed) **Dubs Performance Analyzer->Modders->RimWorldPerformance** for performance problems

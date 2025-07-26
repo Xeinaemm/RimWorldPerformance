@@ -1,13 +1,20 @@
 <Analyzer>
 	<RimWorldPerformance>
 		<Types>
+			<li>Xeinaemm.Common.Extensions</li>
+			<li>Xeinaemm.Common.TickRatePatches</li>
+
+			<li>Xeinaemm.Construction.ConstructionCache</li>
+			<li>Xeinaemm.Construction.Extensions</li>
+			<li>Xeinaemm.Construction.JobDriver_Xeinaemm_ConstructFinishFrame</li>
+			<li>Xeinaemm.Construction.WorkGiver_Xeinaemm_ConstructFinishFrames</li>
+
+			<li>Xeinaemm.Hauling.Extensions</li>
+			<li>Xeinaemm.Hauling.HaulCache</li>
 			<li>Xeinaemm.Hauling.JobDriver_Xeinaemm_HaulFromInventory</li>
 			<li>Xeinaemm.Hauling.JobDriver_Xeinaemm_HaulToInventory</li>
-			<li>Xeinaemm.Hauling.WorkGiver_Xeinaemm_HaulGeneral</li>
-			<li>Xeinaemm.Hauling.HaulCache</li>
 			<li>Xeinaemm.Hauling.Patches</li>
-			<li>Xeinaemm.Hauling.Extensions</li>
-			<li>Xeinaemm.Patches.TickRate</li>
+			<li>Xeinaemm.Hauling.WorkGiver_Xeinaemm_HaulGeneral</li>
 		</Types>
 	</RimWorldPerformance>
 </Analyzer>

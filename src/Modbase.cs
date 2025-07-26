@@ -9,6 +9,8 @@ global using System.Runtime.CompilerServices;
 global using UnityEngine;
 global using Verse;
 global using Verse.AI;
+global using Xeinaemm.Common;
+global using Xeinaemm.Construction;
 global using Xeinaemm.Hauling;
 
 namespace Xeinaemm;
