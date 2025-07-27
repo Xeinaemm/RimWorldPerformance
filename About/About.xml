@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+	<name>RimWorld Performance</name>
+	<author>Xeinaemm</author>
+	<supportedVersions>
+		<li>1.6</li>
+	</supportedVersions>
+	<packageId>Xeinaemm.RimWorld.Performance</packageId>
+	<modDependenciesByVersion>
+		<v1.6>
+			<li>
+				<packageId>brrainz.harmony</packageId>
+				<displayName>Harmony</displayName>
+				<steamWorkshopUrl>steam://url/CommunityFilePage/2009463077</steamWorkshopUrl>
+				<downloadUrl>https://github.com/pardeike/HarmonyRimWorld/releases/latest</downloadUrl>
+			</li>
+		</v1.6>
+	</modDependenciesByVersion>
+	<loadAfter>
+		<li>brrainz.harmony</li>
+	</loadAfter>
+	<url></url>
+	<description>
+Functionality
+1. Redesigned hauling, capable of handling tens of thousands of things at once. Hauling 12k things takes ~4 mins for 10 pawns.
+2. Tick tweaks, that improve late game performance by reducing number of game operations.
+
+Compatible mods:
+1. Allow Tools - mod automatically adjust to haul urgently, no need for Haul+
+2. Combat Extended
+3. Any Extended Storage mod
+
+Incompatible mods:
+1. Pick Up and Haul - similar idea, but PUAH isn't late game optimized or huge scale
+2. Any mod that changes tick functionality
+3. Any "smart" construction/deconstruction mod
+
+Troubleshooting
+1. Enable debug mode in Options/Mod Options/RimWorld Performance.
+2. Extract player.log from Options/General/Log file folder and report it on GitHub.
+3. Remember to disable debug mode aftewards.
+
+Steam:
+GitHub:https://github.com/Xeinaemm/RimWorldPerformance
+	</description>
+</ModMetaData>

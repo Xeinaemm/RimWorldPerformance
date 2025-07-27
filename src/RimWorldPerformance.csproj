@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<ModDirectory>..\mod</ModDirectory>
+		<RootNamespace>Xeinaemm</RootNamespace>
+		<AssemblyName>RimWorldPerformance</AssemblyName>
+		<TargetFramework>net481</TargetFramework>
+		<LangVersion>13.0</LangVersion>
+		<Optimize>true</Optimize>
+		<DebugType>none</DebugType>
+		<OutputPath>$(ModDirectory)\1.6\Assemblies</OutputPath>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<PublicizeAsReferenceAssemblies>false</PublicizeAsReferenceAssemblies>
+		<EnableNETAnalyzers>True</EnableNETAnalyzers>
+		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+		<AnalysisLevel>latest-all</AnalysisLevel>
+		<WarningLevel>9999</WarningLevel>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<NuGetAuditMode>all</NuGetAuditMode>
+		<NoWarn>1591;1701;1702;8032;NU1701;AD0001;NU5128;NU1603</NoWarn>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Krafs.Rimworld.Ref" Version="1.6.*" />
+		<PackageReference Include="Lib.Harmony" Version="2.*" ExcludeAssets="runtime" />
+	</ItemGroup>
+	<Target Name="CopyModFiles" AfterTargets="Build" Condition="'$(TargetFramework)'!=''">
+		<ItemGroup>
+			<AboutFiles Include="..\About\**\*.*" />
+			<DefsFiles Include="..\Defs\**\*.*" />
+			<PatchesFiles Include="..\Patches\**\*.*" />
+			<ExtraRootFiles Include="..\Analyzer.xml" />
+		</ItemGroup>
+		<Copy SourceFiles="@(AboutFiles)" DestinationFolder="$(ModDirectory)\About\%(RecursiveDir)" SkipUnchangedFiles="true" />
+		<Copy SourceFiles="@(DefsFiles)" DestinationFolder="$(ModDirectory)\Defs\%(RecursiveDir)" SkipUnchangedFiles="true" />
+		<Copy SourceFiles="@(PatchesFiles)" DestinationFolder="$(ModDirectory)\Patches\%(RecursiveDir)" SkipUnchangedFiles="true" />
+		<Copy SourceFiles="@(ExtraRootFiles)" DestinationFolder="$(ModDirectory)\%(RecursiveDir)" SkipUnchangedFiles="true" />
+	</Target>
+	<ItemGroup>
+		<Content Include="..\*.*" Exclude="**\*.sln" CopyToOutputDirectory="Never" Link="_Root\%(Filename)%(Extension)" />
+		<Content Include="..\About\**\*" CopyToOutputDirectory="Never" Link="_mod\About\%(Filename)%(Extension)" />
+		<Content Include="..\Defs\**\*" CopyToOutputDirectory="Never" Link="_mod\Defs\%(Filename)%(Extension)" />
+		<Content Include="..\Patches\**\*" CopyToOutputDirectory="Never" Link="_mod\Patches\%(Filename)%(Extension)" />
+	</ItemGroup>
+</Project>

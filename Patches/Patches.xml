@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Patch>
+	<Operation Class="PatchOperationReplace">
+		<xpath>/Defs/WorkGiverDef[defName="HaulMerge"]/priorityInType</xpath>
+		<value>
+			<priorityInType>200</priorityInType>
+		</value>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>/Defs/WorkGiverDef[defName="ConstructFinishFrames"]/priorityInType</xpath>
+		<value>
+			<priorityInType>69</priorityInType>
+		</value>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>/Defs/WorkGiverDef[defName="ConstructDeliverResourcesToBlueprints"]/priorityInType</xpath>
+		<value>
+			<priorityInType>71</priorityInType>
+		</value>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>/Defs/WorkGiverDef[defName="ConstructDeliverResourcesToFrames"]/priorityInType</xpath>
+		<value>
+			<priorityInType>72</priorityInType>
+		</value>
+	</Operation>
+</Patch>

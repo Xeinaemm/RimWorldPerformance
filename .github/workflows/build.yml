@@ -1,0 +1,24 @@
+name: RimWorldPerformance Build
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: windows-latest
+
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v4
+      with:
+        persist-credentials: true
+
+    - name: Set up .NET SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'
+
+    - name: Build
+      run: dotnet build
