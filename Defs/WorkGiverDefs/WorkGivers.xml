@@ -5,7 +5,7 @@
 		<label>construct placed frames</label>
 		<giverClass>WorkGiver_ConstructFinishFrames</giverClass>
 		<workType>Construction</workType>
-		<priorityInType>70</priorityInType>
+		<priorityInType>80</priorityInType>
 		<verb>construct</verb>
 		<gerund>constructing</gerund>
 		<requiredCapacities>
@@ -22,7 +22,7 @@
         <workType>Hauling</workType>
         <verb>haul</verb>
         <gerund>hauling</gerund>
-        <priorityInType>16</priorityInType>
+        <priorityInType>15</priorityInType>
         <requiredCapacities>
             <li>Manipulation</li>
         </requiredCapacities>
