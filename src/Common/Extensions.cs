@@ -5,9 +5,15 @@ internal static class Extensions
 		(pawn.RaceProps.Humanlike || pawn.RaceProps.Animal || pawn.RaceProps.IsMechanoid) &&
 		pawn.Faction == Faction.OfPlayerSilentFail;
 
-	internal static void TickRate(ref int __result)
+	internal static void TickRateMultiplier(ref int __result)
 	{
 		if (Settings.EnableTickRateMultiplier)
 			__result *= Settings.TickRateMultiplier;
+	}
+
+	internal static void TickRateInterval(ref int __result)
+	{
+		if (Settings.EnableTickRateMultiplier)
+			__result = 360;
 	}
 }

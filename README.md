@@ -13,7 +13,7 @@ All RimWorld performance tweaks in one place!
 ## Incompatible mods:
 - Pick Up and Haul - similar idea, but PUAH isn't late game optimized or huge scale
 - Any mod that changes tick rate functionality
-- Any "smart" construction/deconstruction mod
+- Any "smart" deconstruction mod
 
 ## Troubleshooting
 - Check first in mod (if installed) **Dubs Performance Analyzer->Modders->RimWorldPerformance** for performance problems

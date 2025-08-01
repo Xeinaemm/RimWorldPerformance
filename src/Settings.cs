@@ -18,13 +18,13 @@ public class Settings : ModSettings
 		ls.CheckboxLabeled("Enable tick rate multiplier", ref _enableTickRateMultiplier, "When enabled, allows adjust multiplier of update tick rates.");
 
 		if (_enableTickRateMultiplier)
-			_tickRateMultiplier = (int)ls.SliderLabeled($"Tick rates multiplier: {_tickRateMultiplier}", _tickRateMultiplier, 1f, 100f);
+			_tickRateMultiplier = (int)ls.SliderLabeled($"Tick rates multiplier: {_tickRateMultiplier}", _tickRateMultiplier, 1f, 360f);
 
 		ls.Gap();
 		if (Widgets.ButtonText(new Rect(0f, ls.CurHeight, 180f, 29f), "Reset settings"))
 		{
 			_enableDebugLogging = false;
-			_tickRateMultiplier = 10;
+			_tickRateMultiplier = 60;
 			_enableTickRateMultiplier = true;
 		}
 		ls.End();
@@ -34,7 +34,7 @@ public class Settings : ModSettings
 	{
 		base.ExposeData();
 		Scribe_Values.Look(ref _enableDebugLogging, "enableDebugLogging", false);
-		Scribe_Values.Look(ref _tickRateMultiplier, "tickRateMultiplier", 10);
+		Scribe_Values.Look(ref _tickRateMultiplier, "tickRateMultiplier", 60);
 		Scribe_Values.Look(ref _enableTickRateMultiplier, "enableTickRateMultiplier", true);
 	}
 }

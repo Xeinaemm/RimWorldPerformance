@@ -10,11 +10,11 @@ internal static class HarmonyPatches
 			Harmony.DEBUG = true;
 
 		harmony.Patch(AccessTools.PropertyGetter(typeof(Thing), "MaxTickIntervalRate"),
-			postfix: new HarmonyMethod(typeof(Extensions), nameof(Extensions.TickRate)));
+			postfix: new HarmonyMethod(typeof(Extensions), nameof(Extensions.TickRateInterval)));
 		harmony.Patch(AccessTools.PropertyGetter(typeof(Thing), "UpdateRateTicks"),
-			postfix: new HarmonyMethod(typeof(Extensions), nameof(Extensions.TickRate)));
+			postfix: new HarmonyMethod(typeof(Extensions), nameof(Extensions.TickRateMultiplier)));
 		harmony.Patch(AccessTools.PropertyGetter(typeof(WorldObject), "UpdateRateTicks"),
-			postfix: new HarmonyMethod(typeof(Extensions), nameof(Extensions.TickRate)));
+			postfix: new HarmonyMethod(typeof(Extensions), nameof(Extensions.TickRateMultiplier)));
 
 		harmony.Patch(AccessTools.Method(typeof(JobDriver_Deconstruct), "MakeNewToils"),
 			postfix: new HarmonyMethod(typeof(Construction.Extensions), nameof(Construction.Extensions.CheckRoofs)));

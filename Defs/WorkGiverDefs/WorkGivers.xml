@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Defs>
-	<WorkGiverDef>
+	<!--<WorkGiverDef>
 		<defName>WorkGiver_Xeinaemm_ConstructFinishFrames</defName>
 		<label>construct placed frames</label>
 		<giverClass>WorkGiver_ConstructFinishFrames</giverClass>
 		<workType>Construction</workType>
-		<priorityInType>70</priorityInType>
+		<priorityInType>80</priorityInType>
 		<verb>construct</verb>
 		<gerund>constructing</gerund>
 		<requiredCapacities>
@@ -14,7 +14,7 @@
 		<nonColonistsCanDo>true</nonColonistsCanDo>
 		<prioritizeSustains>true</prioritizeSustains>
 		<equivalenceGroup>AssistInConstruction</equivalenceGroup>
-	</WorkGiverDef>
+	</WorkGiverDef>-->
     <WorkGiverDef>
         <defName>Xeinaemm_HaulGeneral</defName>
         <label>Extended hauling</label>
@@ -22,7 +22,7 @@
         <workType>Hauling</workType>
         <verb>haul</verb>
         <gerund>hauling</gerund>
-        <priorityInType>16</priorityInType>
+        <priorityInType>15</priorityInType>
         <requiredCapacities>
             <li>Manipulation</li>
         </requiredCapacities>
